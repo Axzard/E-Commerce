@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uts/screen/shipping_method_screen.dart';
 import '../models/product_model.dart';
 
 class ShoppingCartScreen extends StatefulWidget {
@@ -39,10 +40,6 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
         title: const Text(
           "Shopping Cart",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
@@ -205,83 +202,84 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
   }
 
   // 🔹 Tampilan jika cart kosong
- Widget _buildEmptyCart(BuildContext context) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 24.0),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const SizedBox(height: 60), // jarak dari atas agar tidak terlalu nempel
-        // Bagian tengah (ikon dan teks)
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(
-              Icons.shopping_bag_outlined,
-              color: Color(0xFF6CC51D),
-              size: 100,
-            ),
-            SizedBox(height: 20),
-            Text(
-              "Your cart is empty !",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-            ),
-            SizedBox(height: 8),
-            Text(
-              "You will get a response within a few minutes.",
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey, fontSize: 14),
-            ),
-          ],
-        ),
-
-        // Tombol di bawah layar
-        Padding(
-          padding: const EdgeInsets.only(bottom: 30), // jarak dari bawah
-          child: SizedBox(
-            width: double.infinity,
-            height: 52,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
+  Widget _buildEmptyCart(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const SizedBox(
+            height: 60,
+          ), // jarak dari atas agar tidak terlalu nempel
+          // Bagian tengah (ikon dan teks)
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Icon(
+                Icons.shopping_bag_outlined,
+                color: Color(0xFF6CC51D),
+                size: 100,
               ),
-              child: Ink(
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFAEDC81), Color(0xFF6CC51D)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+              SizedBox(height: 20),
+              Text(
+                "Your cart is empty !",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              ),
+              SizedBox(height: 8),
+              Text(
+                "You will get a response within a few minutes.",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey, fontSize: 14),
+              ),
+            ],
+          ),
+
+          // Tombol di bawah layar
+          Padding(
+            padding: const EdgeInsets.only(bottom: 30), // jarak dari bawah
+            child: SizedBox(
+              width: double.infinity,
+              height: 52,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  borderRadius: BorderRadius.circular(12),
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
                 ),
-                child: Container(
-                  alignment: Alignment.center,
-                  child: const Text(
-                    "Start shopping",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
+                child: Ink(
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFAEDC81), Color(0xFF6CC51D)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: const Text(
+                      "Start shopping",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
-
+        ],
+      ),
+    );
+  }
 
   // 🔹 Bagian bawah total & tombol checkout
   Widget _buildBottomSummary() {
@@ -356,8 +354,14 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
           const SizedBox(height: 16),
           GestureDetector(
             onTap: () {
-              // checkout logic
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ShippingMethodScreen(),
+                ),
+              );
             },
+
             child: Container(
               width: double.infinity,
               height: 52,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uts/auth/login_auth.dart';
 import 'package:uts/screen/about_me_screen.dart';
 import 'package:uts/screen/my_address_screen.dart';
 import 'package:uts/screen/my_card_screen.dart';
@@ -121,7 +122,14 @@ class AccountScreen extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => const NotificationScreen()),
                     );
                   }),
-                  _buildMenuItem(context, Icons.logout, "Sign out", isLogout: true),
+                  _buildMenuItem(context, Icons.logout, "Sign out",
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const LoginScreen()),
+                    );
+                  },
+                  ),
                 ],
               ),
             ),
@@ -133,7 +141,7 @@ class AccountScreen extends StatelessWidget {
 
   // 🔹 Widget menu item dengan fungsi onTap opsional
   Widget _buildMenuItem(BuildContext context, IconData icon, String title,
-      {bool isLogout = false, VoidCallback? onTap}) {
+      {VoidCallback? onTap}) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),

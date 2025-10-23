@@ -21,7 +21,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -89,15 +89,13 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      const CircleAvatar(
-                        radius: 12,
-                        backgroundColor: Colors.red,
-                      ),
-                      const SizedBox(width: 6),
-                      const CircleAvatar(
-                        radius: 12,
-                        backgroundColor: Colors.orange,
+                      Image.asset(
+                        'assets/mastercard.png',
+                        width: 48,
+                        height: 36,
+                        fit: BoxFit.contain,
                       ),
                     ],
                   ),
@@ -316,11 +314,13 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         ),
         child: Column(
           children: [
-            Icon(icon,
-                color: isSelected
-                    ? const Color(0xFF6CC51D)
-                    : Colors.grey.shade600,
-                size: 28),
+            Icon(
+              icon,
+              color: isSelected
+                  ? const Color(0xFF6CC51D)
+                  : Colors.grey.shade600,
+              size: 28,
+            ),
             const SizedBox(height: 8),
             Text(
               label,
@@ -345,8 +345,10 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         hintStyle: GoogleFonts.inter(color: Colors.grey.shade500, fontSize: 14),
         filled: true,
         fillColor: const Color(0xFFF8F8F8),
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 14,
+          horizontal: 12,
+        ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Colors.grey.shade300),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uts/models/credit_card_model.dart';
 
 class AddCardScreen extends StatefulWidget {
   const AddCardScreen({Key? key}) : super(key: key);
@@ -11,12 +12,16 @@ class AddCardScreen extends StatefulWidget {
 class _AddCardScreenState extends State<AddCardScreen> {
   bool saveCard = true;
 
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController numberController = TextEditingController();
+  final TextEditingController expiryController = TextEditingController();
+  final TextEditingController cvvController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      // -------------------- APP BAR --------------------
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -35,7 +40,6 @@ class _AddCardScreenState extends State<AddCardScreen> {
         ),
       ),
 
-      // -------------------- BODY --------------------
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         child: Column(
@@ -56,18 +60,11 @@ class _AddCardScreenState extends State<AddCardScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      const CircleAvatar(
-                        radius: 12,
-                        backgroundColor: Colors.red,
-                      ),
-                      const SizedBox(width: 8),
-                      const CircleAvatar(
-                        radius: 12,
-                        backgroundColor: Colors.orange,
-                      ),
-                    ],
+                  Image.asset(
+                    'assets/mastercard.png',
+                    width: 48,
+                    height: 36,
+                    fit: BoxFit.contain,
                   ),
                   const SizedBox(height: 24),
                   Text(
@@ -131,15 +128,16 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
             const SizedBox(height: 24),
 
-            // Input fields
             _buildInputField(
               hint: "Name on the card",
               icon: Icons.person_outline,
+              controller: nameController,
             ),
             const SizedBox(height: 12),
             _buildInputField(
               hint: "Card number",
               icon: Icons.credit_card_outlined,
+              controller: numberController,
             ),
             const SizedBox(height: 12),
             Row(
@@ -148,6 +146,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                   child: _buildInputField(
                     hint: "Month / Year",
                     icon: Icons.date_range_outlined,
+                    controller: expiryController,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -155,6 +154,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                   child: _buildInputField(
                     hint: "CVV",
                     icon: Icons.lock_outline,
+                    controller: cvvController,
                   ),
                 ),
               ],
@@ -162,7 +162,6 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
             const SizedBox(height: 12),
 
-            // Save this card toggle
             Row(
               children: [
                 Switch(
@@ -184,19 +183,33 @@ class _AddCardScreenState extends State<AddCardScreen> {
               ],
             ),
 
-            const SizedBox(height: 100), // ruang biar tidak ketutupan tombol
+            const SizedBox(height: 100),
           ],
         ),
       ),
 
-      // -------------------- BUTTON FIXED DI BAWAH --------------------
+      // tombol bawah
       bottomNavigationBar: SafeArea(
         minimum: const EdgeInsets.all(20),
         child: SizedBox(
           width: double.infinity,
           height: 52,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              // buat model baru
+              final newCard = CreditCardModel(
+                cardHolderName: nameController.text,
+                cardNumber: numberController.text,
+                expiryDate: expiryController.text,
+                cvv: cvvController.text,
+                isSaved: saveCard,
+                cardType: 'MasterCard',
+                cardImage: 'assets/mastercard.png',
+              );
+
+              // kirim balik ke MyCardsScreen
+              Navigator.pop(context, newCard);
+            },
             style: ElevatedButton.styleFrom(
               padding: EdgeInsets.zero,
               shape: RoundedRectangleBorder(
@@ -232,20 +245,23 @@ class _AddCardScreenState extends State<AddCardScreen> {
     );
   }
 
-  // -------------------- INPUT FIELD HELPER --------------------
-  Widget _buildInputField({required String hint, required IconData icon}) {
+  Widget _buildInputField({
+    required String hint,
+    required IconData icon,
+    TextEditingController? controller,
+  }) {
     return TextField(
+      controller: controller,
       decoration: InputDecoration(
         prefixIcon: Icon(icon, color: Colors.grey.shade600),
         hintText: hint,
-        hintStyle: GoogleFonts.inter(
-          color: Colors.grey.shade500,
-          fontSize: 14,
-        ),
+        hintStyle: GoogleFonts.inter(color: Colors.grey.shade500, fontSize: 14),
         filled: true,
         fillColor: const Color(0xFFF8F8F8),
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 14,
+          horizontal: 12,
+        ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Colors.grey.shade300),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:uts/screen/add_address_screen.dart';
 
 class MyAddressScreen extends StatefulWidget {
@@ -10,11 +11,12 @@ class MyAddressScreen extends StatefulWidget {
 
 class _MyAddressScreenState extends State<MyAddressScreen> {
   bool makeDefault = true;
+  bool isExpanded = true; // 🔹 untuk buka/tutup form default address
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F8F8),
+      backgroundColor: const Color(0xFFF2F3F5),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -23,19 +25,18 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'My Address',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
+          style: GoogleFonts.inter(
             fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Colors.black,
           ),
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.add_circle_outline, color: Colors.black),
             onPressed: () {
-              // tambah alamat baru
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const AddAddressScreen()),
@@ -44,261 +45,291 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            _buildDefaultAddressCard(),
-            const SizedBox(height: 12),
-            _buildAddressForm(),
-            const SizedBox(height: 12),
-            _buildSecondaryAddressCard(),
-            const SizedBox(height: 24),
-            _buildSaveButton(context),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // 🔹 Kartu alamat default
-  Widget _buildDefaultAddressCard() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
         children: [
-          // Label "DEFAULT"
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: const Color(0xFF6CC51D).withOpacity(0.1),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: const Text(
-              'DEFAULT',
-              style: TextStyle(
-                color: Color(0xFF6CC51D),
-                fontWeight: FontWeight.w600,
-                fontSize: 12,
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-
-          // Info alamat
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          // --- Address card with toggle ---
+          Stack(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF6CC51D).withOpacity(0.1),
-                  shape: BoxShape.circle,
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(Icons.location_on, color: Color(0xFF6CC51D)),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      "Russell Austin",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                      ),
+                  children: [
+                    // Header row
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFEFFFE9),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Center(
+                            child: Icon(Icons.home_outlined, color: Color(0xFF6CC51D), size: 28),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Russell Austin",
+                                style: GoogleFonts.inter(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                "2811 Crescent Day, LA Port\nCalifornia, United States 77571",
+                                style: GoogleFonts.inter(
+                                  fontSize: 13,
+                                  height: 1.4,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                "+1 202 555 0142",
+                                style: GoogleFonts.inter(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Toggle icon (expand/collapse)
+                        GestureDetector(
+                          onTap: () {
+                            setState(() => isExpanded = !isExpanded);
+                          },
+                          child: Icon(
+                            isExpanded
+                                ? Icons.keyboard_arrow_up_rounded
+                                : Icons.keyboard_arrow_down_rounded,
+                            color: const Color(0xFF6CC51D),
+                            size: 26,
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 4),
-                    Text(
-                      "2811 Crescent Day, LA Port\nCalifornia, United States 77571",
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 13,
-                        height: 1.3,
+
+                    // Expandable form section
+                    AnimatedCrossFade(
+                      duration: const Duration(milliseconds: 300),
+                      firstChild: const SizedBox.shrink(),
+                      secondChild: Column(
+                        children: [
+                          const SizedBox(height: 14),
+                          const Divider(height: 1),
+                          const SizedBox(height: 12),
+                          _buildFilledField(icon: Icons.person_outline, hint: 'Name', value: 'Russell Austin'),
+                          const SizedBox(height: 10),
+                          _buildFilledField(
+                            icon: Icons.location_on_outlined,
+                            hint: 'Address',
+                            value: '2811 Crescent Day, LA Port\nCalifornia, United States 77571',
+                            maxLines: 2,
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Expanded(child: _buildFilledField(icon: Icons.location_city, hint: 'City', value: 'Los Angeles')),
+                              const SizedBox(width: 10),
+                              Expanded(child: _buildFilledField(icon: Icons.pin_drop_outlined, hint: 'Zip code', value: '77571')),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          _buildFilledField(
+                            icon: Icons.public,
+                            hint: 'Country',
+                            value: 'United States',
+                            suffix: Icons.keyboard_arrow_down,
+                          ),
+                          const SizedBox(height: 10),
+                          _buildFilledField(icon: Icons.phone_outlined, hint: 'Phone number', value: '+1 202 555 0142'),
+                          const SizedBox(height: 12),
+                          Row(
+                            children: [
+                              Switch(
+                                value: makeDefault,
+                                activeColor: const Color(0xFF6CC51D),
+                                onChanged: (v) => setState(() => makeDefault = v),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Make default',
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      "+1 202 555 0142",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
-                      ),
+                      crossFadeState: isExpanded
+                          ? CrossFadeState.showSecond
+                          : CrossFadeState.showFirst,
                     ),
                   ],
                 ),
               ),
-              const Icon(Icons.more_vert, color: Colors.black54),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 
-  // 🔹 Formulir edit / tambah alamat
-  Widget _buildAddressForm() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          _buildTextField(Icons.person_outline, "Name"),
-          const SizedBox(height: 10),
-          _buildTextField(Icons.location_on_outlined, "Address"),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(child: _buildTextField(Icons.location_city, "City")),
-              const SizedBox(width: 10),
-              Expanded(
-                child: _buildTextField(Icons.pin_drop_outlined, "Zip code"),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          _buildTextField(Icons.public, "Country"),
-          const SizedBox(height: 10),
-          _buildTextField(Icons.phone_outlined, "Phone number"),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Switch(
-                value: makeDefault,
-                activeColor: const Color(0xFF6CC51D),
-                onChanged: (val) => setState(() => makeDefault = val),
-              ),
-              const Text(
-                "Make default",
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
+              // Label DEFAULT
+              Positioned(
+                top: 0,
+                left: 10,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE8F7E1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    'DEFAULT',
+                    style: GoogleFonts.inter(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF6CC51D),
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
-        ],
-      ),
-    );
-  }
 
-  // 🔹 Kartu alamat kedua
-  Widget _buildSecondaryAddressCard() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+          const SizedBox(height: 18),
+
+          // --- Secondary address card ---
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: const Color(0xFF6CC51D).withOpacity(0.1),
-              shape: BoxShape.circle,
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.location_on, color: Color(0xFF6CC51D)),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  "Jissca Simpson",
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  "2811 Crescent Day, LA Port\nCalifornia, United States 77571",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 13,
-                    height: 1.3,
+              children: [
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEFFFE9),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Center(
+                    child: Icon(Icons.location_on, color: Color(0xFF6CC51D), size: 26),
                   ),
                 ),
-                SizedBox(height: 4),
-                Text(
-                  "+1 202 555 0142",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Jissca Simpson',
+                        style: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w700),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        '2811 Crescent Day, LA Port\nCalifornia, United States 77571',
+                        style: GoogleFonts.inter(fontSize: 13, color: Colors.black54, height: 1.3),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '+1 202 555 0142',
+                        style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87),
+                      ),
+                    ],
                   ),
                 ),
+                const SizedBox(width: 6),
+                const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF6CC51D), size: 26),
               ],
             ),
           ),
-          const Icon(Icons.expand_more, color: Colors.black54),
+
+          const SizedBox(height: 90),
         ],
       ),
-    );
-  }
 
-  // 🔹 Tombol Save Settings
-  Widget _buildSaveButton(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Address saved successfully!')),
-        );
-      },
-      child: Container(
-        width: double.infinity,
-        height: 52,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFFAEDC81), Color(0xFF6CC51D)],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        alignment: Alignment.center,
-        child: const Text(
-          "Save settings",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-            fontSize: 16,
+      // Save settings button
+      bottomNavigationBar: SafeArea(
+        minimum: const EdgeInsets.all(20),
+        child: SizedBox(
+          height: 52,
+          child: ElevatedButton(
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Address saved successfully!')),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.zero,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+            ),
+            child: Ink(
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(colors: [Color(0xFFAEDC81), Color(0xFF6CC51D)]),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: Text(
+                  'Save settings',
+                  style: GoogleFonts.inter(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  // 🔹 Input field custom
-  Widget _buildTextField(IconData icon, String hint) {
+  Widget _buildFilledField({
+    required IconData icon,
+    required String hint,
+    String? value,
+    int maxLines = 1,
+    IconData? suffix,
+  }) {
     return TextField(
+      readOnly: true,
+      controller: TextEditingController(text: value),
+      maxLines: maxLines,
       decoration: InputDecoration(
         prefixIcon: Icon(icon, color: Colors.grey.shade600),
+        suffixIcon: suffix != null ? Icon(suffix, color: Colors.grey.shade600) : null,
         hintText: hint,
-        hintStyle: const TextStyle(color: Colors.grey),
+        hintStyle: GoogleFonts.inter(color: Colors.grey.shade500),
         filled: true,
-        fillColor: const Color(0xFFF8F8F8),
+        fillColor: const Color(0xFFF2F3F5),
+        contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Colors.grey.shade200),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(color: Color(0xFF6CC51D)),
         ),
       ),

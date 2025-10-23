@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:uts/models/address_model.dart';
 
 class AddAddressScreen extends StatefulWidget {
   const AddAddressScreen({super.key});
@@ -41,10 +42,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         ),
         title: const Text(
           "Add Address",
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
@@ -112,37 +110,53 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
               const SizedBox(height: 150),
               // Submit button
               Container(
-              width: double.infinity,
-              height: 52,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFAEDC81), Color(0xFF6CC51D)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-              child: ElevatedButton(
-                onPressed: () {
-                  // aksi simpan
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                width: double.infinity,
+                height: 52,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFAEDC81), Color(0xFF6CC51D)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
                 ),
-                child: const Text(
-                  "Add address",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      final newAddress = Address(
+                        name: nameController.text.trim(),
+                        email: emailController.text.trim(),
+                        phone: phoneController.text.trim(),
+                        address: addressController.text.trim(),
+                        city: cityController.text.trim(),
+                        zipCode: zipController.text.trim(),
+                        country: selectedCountry ?? '',
+                        isDefault: saveAddress,
+                      );
+
+                      Navigator.pop(
+                        context,
+                        newAddress,
+                      ); // ⬅️ kirim alamat ke MyAddressScreen
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    "Add address",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ),
-            ),
             ],
           ),
         ),
@@ -198,18 +212,17 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
           ),
         ),
         items: countries
-            .map((country) => DropdownMenuItem(
-                  value: country,
-                  child: Text(country),
-                ))
+            .map(
+              (country) =>
+                  DropdownMenuItem(value: country, child: Text(country)),
+            )
             .toList(),
         onChanged: (value) {
           setState(() {
             selectedCountry = value;
           });
         },
-        validator: (value) =>
-            value == null ? 'Please select a country' : null,
+        validator: (value) => value == null ? 'Please select a country' : null,
       ),
     );
   }
