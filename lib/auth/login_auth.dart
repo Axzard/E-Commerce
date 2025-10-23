@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uts/auth/forgot_password_auth.dart';
 import 'package:uts/auth/signup_auth.dart';
 import 'package:uts/auth/welcome_auth.dart';
-import 'package:uts/screen/home_screen.dart';
+import 'package:uts/routes/bottom_nav_routes.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -213,7 +213,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const HomeScreen(),
+                                builder: (context) => const BottomNavRoutes(),
                               ),
                             );
                           },

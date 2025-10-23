@@ -51,6 +51,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         elevation: 0,
         title: const Text(
@@ -60,6 +61,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             fontWeight: FontWeight.w600,
           ),
         ),
+        leading: IconButton(onPressed: (){
+          Navigator.pop(context);
+        }, icon: Icon(Icons.arrow_back)),
         centerTitle: true,
       ),
       body: ListView.builder(

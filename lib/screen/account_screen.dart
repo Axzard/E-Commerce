@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uts/auth/login_auth.dart';
 import 'package:uts/screen/about_me_screen.dart';
+import 'package:uts/screen/favorites_screen.dart';
 import 'package:uts/screen/my_address_screen.dart';
 import 'package:uts/screen/my_card_screen.dart';
 import 'package:uts/screen/my_order_screen.dart';
@@ -86,7 +87,14 @@ class AccountScreen extends StatelessWidget {
                     );
                   },
                   ),
-                  _buildMenuItem(context, Icons.favorite_border, "My Favorites"),
+                  _buildMenuItem(context, Icons.favorite_border, "My Favorites",
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const FavoriteScreen()),
+                    );
+                  },
+                  ),
                   _buildMenuItem(context, Icons.location_on_outlined, "My Address",
                   // 🔹 Koneksi ke MyAddressScreen
                   onTap: () {

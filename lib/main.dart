@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:uts/routes/bottom_nav_routes.dart';
+import 'package:uts/onboarding/splash_screen1.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
         fontFamily: 'Poppins',
       ),
-      home: const BottomNavRoutes(),
+      home: const Splash1(),
     );
   }
 }
