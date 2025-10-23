@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uts/screen/category_screen.dart';
 import 'package:uts/screen/shipping_method_screen.dart';
 import '../models/product_model.dart';
 
@@ -242,8 +243,14 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
               height: 52,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CategoryScreen(),
+                    ),
+                  );
                 },
+
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.zero,
                   shape: RoundedRectangleBorder(

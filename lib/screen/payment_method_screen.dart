@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uts/screen/order_success_screen.dart';
 
 class PaymentMethodScreen extends StatefulWidget {
   const PaymentMethodScreen({Key? key}) : super(key: key);
@@ -10,7 +11,8 @@ class PaymentMethodScreen extends StatefulWidget {
 
 class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   bool saveCard = true;
-  int selectedMethod = 1; // 0=Paypal, 1=CreditCard, 2=ApplePay
+  int selectedMethod = 0;
+  int currentStep = 3; // step sekarang = Payment
 
   @override
   Widget build(BuildContext context) {
@@ -38,15 +40,18 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Step indicator
+            // ✅ Step Indicator (dengan garis hijau penghubung)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildStepCircle("1", "DELIVERY", true),
-                _buildStepCircle("2", "ADDRESS", true),
-                _buildStepCircle("3", "PAYMENT", true),
+                _buildStepCircle(1, "DELIVERY", currentStep: currentStep),
+                _buildLine(active: currentStep >= 2),
+                _buildStepCircle(2, "ADDRESS", currentStep: currentStep),
+                _buildLine(active: currentStep >= 3),
+                _buildStepCircle(3, "PAYMENT", currentStep: currentStep),
               ],
             ),
+
             const SizedBox(height: 24),
 
             // Payment method options
@@ -213,14 +218,21 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
               ],
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 70),
 
             // Make a payment button
             SizedBox(
               width: double.infinity,
               height: 52,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const OrderSuccessScreen(),
+                    ),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.zero,
                   shape: RoundedRectangleBorder(
@@ -258,33 +270,56 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     );
   }
 
-  // Helper Widget untuk step indicator
-  Widget _buildStepCircle(String number, String label, bool active) {
+  // 🔹 Step circle (dengan centang dan nomor)
+  Widget _buildStepCircle(
+    int stepNumber,
+    String label, {
+    required int currentStep,
+  }) {
+    bool isCompleted = stepNumber < currentStep;
+    bool isActive = stepNumber == currentStep;
+
     return Column(
       children: [
-        Container(
-          width: 36,
-          height: 36,
-          decoration: BoxDecoration(
-            color: active ? const Color(0xFF6CC51D) : Colors.grey[300],
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(Icons.check, color: Colors.white, size: 20),
+        CircleAvatar(
+          radius: 16,
+          backgroundColor: isCompleted || isActive
+              ? const Color(0xFF6CC51D)
+              : const Color(0xFFEAEAEA),
+          child: isCompleted
+              ? const Icon(Icons.check, color: Colors.white, size: 18)
+              : Text(
+                  stepNumber.toString(),
+                  style: TextStyle(
+                    color: isActive ? Colors.white : Colors.black54,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
         ),
         const SizedBox(height: 6),
         Text(
           label,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: 12,
-            fontWeight: FontWeight.w500,
-            color: Colors.black,
+            color: isCompleted || isActive ? Colors.black : Colors.black54,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ],
     );
   }
 
-  // Helper Widget untuk pilihan metode pembayaran
+  // 🔹 Garis penghubung antar step
+  Widget _buildLine({required bool active}) {
+    return Container(
+      width: 40,
+      height: 2,
+      color: active ? const Color(0xFF6CC51D) : const Color(0xFFEAEAEA),
+    );
+  }
+
+  // 🔹 Payment option
   Widget _buildPaymentOption({
     required IconData icon,
     required String label,
@@ -336,7 +371,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     );
   }
 
-  // Helper Widget untuk TextField
+  // 🔹 TextField
   Widget _buildInputField({required String hint, required IconData icon}) {
     return TextField(
       decoration: InputDecoration(

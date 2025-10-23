@@ -92,10 +92,11 @@ class _ShippingInformationScreenState extends State<ShippingInformationScreen> {
                   )
                 ],
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 120),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const PaymentMethodScreen()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const PaymentMethodScreen()));
                 },
                 child: Container(
                   width: double.infinity,
@@ -126,34 +127,40 @@ class _ShippingInformationScreenState extends State<ShippingInformationScreen> {
     );
   }
 
+  // ✅ Stepper sekarang mendukung centang hijau untuk step 1
   Widget _buildStepper() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildStepCircle("1", "DELIVERY", currentStep >= 1),
+        _buildStepCircle("1", "DELIVERY", 1),
         _buildLine(active: currentStep >= 2),
-        _buildStepCircle("2", "ADDRESS", currentStep >= 2),
+        _buildStepCircle("2", "ADDRESS", 2),
         _buildLine(active: currentStep >= 3),
-        _buildStepCircle("3", "PAYMENT", currentStep >= 3),
+        _buildStepCircle("3", "PAYMENT", 3),
       ],
     );
   }
 
-  Widget _buildStepCircle(String number, String label, bool active) {
+  // Perbaikan: step 1 muncul centang saat currentStep > 1
+  Widget _buildStepCircle(String number, String label, int stepNumber) {
+    final bool active = currentStep >= stepNumber;
+
     return Column(
       children: [
         CircleAvatar(
           radius: 16,
           backgroundColor:
               active ? const Color(0xFF6CC51D) : const Color(0xFFEAEAEA),
-          child: Text(
-            number,
-            style: TextStyle(
-              color: active ? Colors.white : Colors.black54,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-          ),
+          child: currentStep > stepNumber
+              ? const Icon(Icons.check, color: Colors.white, size: 16)
+              : Text(
+                  number,
+                  style: TextStyle(
+                    color: active ? Colors.white : Colors.black54,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
         ),
         const SizedBox(height: 6),
         Text(

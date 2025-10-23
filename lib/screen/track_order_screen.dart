@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart'; // pastikan tambahkan di pubspec.yaml
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:uts/routes/bottom_nav_routes.dart'; // pastikan tambahkan di pubspec.yaml
 
 class TrackOrderScreen extends StatelessWidget {
   const TrackOrderScreen({super.key});
@@ -45,15 +46,17 @@ class TrackOrderScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const BottomNavRoutes()),
+            );
+          },
         ),
         title: const Text(
           "Track Order",
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
@@ -97,10 +100,7 @@ class TrackOrderScreen extends StatelessWidget {
                         SizedBox(height: 4),
                         Text(
                           'Placed on October 19 2021',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.grey,
-                          ),
+                          style: TextStyle(fontSize: 13, color: Colors.grey),
                         ),
                         SizedBox(height: 6),
                         Text(
