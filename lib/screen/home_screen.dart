@@ -4,6 +4,7 @@ import 'package:uts/models/banner_model.dart';
 import 'package:uts/models/category_model.dart';
 import 'package:uts/models/product_model.dart';
 import 'package:uts/screen/category_screen.dart';
+import 'package:uts/screen/filter_screen.dart';
 import 'package:uts/screen/product_detail_screen.dart';
 import 'package:uts/screen/search_screen.dart';
 
@@ -75,8 +76,17 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-
-                        Icon(Icons.tune_outlined, color: Colors.grey.shade600),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const FilterScreen(),
+                              ),
+                            );
+                          },
+                          child: Icon(Icons.tune_outlined, color: Colors.grey.shade600),
+                        ),
                       ],
                     ),
                   ),
